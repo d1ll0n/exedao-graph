@@ -1,0 +1,59 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Contract
+    network: mainnet
+    source:
+      address: "0x011E3EaDF19Bbbce2F1327Ce5dDE1f49c48D9c71"
+      abi: Contract
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - ApplicationAdded
+        - ApplicationCanceled
+        - ExtensionAdded
+        - ProposalSubmission
+        - ProposalVote
+        - ProposalApproval
+        - ProposalExpiration
+        - SharesBurned
+        - SharesMinted
+        - TokenAdded
+        - TokenRemoved
+        - TokenTransferred
+        - TokenReceived
+      abis:
+        - name: Contract
+          file: ./abis/Contract.json
+      eventHandlers:
+        - event: ApplicationAdded(address,uint64)
+          handler: handleApplicationAdded
+        - event: ApplicationCanceled(address)
+          handler: handleApplicationCanceled
+        - event: ExtensionAdded(uint256,bytes32)
+          handler: handleExtensionAdded
+        - event: ProposalSubmission(indexed address,indexed bytes32,bytes32,uint64)
+          handler: handleProposalSubmission
+        - event: ProposalVote(indexed address,indexed bytes32,uint64)
+          handler: handleProposalVote
+        - event: ProposalApproval(indexed address,indexed bytes32)
+          handler: handleProposalApproval
+        - event: ProposalExpiration(indexed bytes32)
+          handler: handleProposalExpiration
+        - event: SharesBurned(indexed address,uint64)
+          handler: handleSharesBurned
+        - event: SharesMinted(indexed address,uint64)
+          handler: handleSharesMinted
+        - event: TokenAdded(indexed address)
+          handler: handleTokenAdded
+        - event: TokenRemoved(indexed address)
+          handler: handleTokenRemoved
+        - event: TokenTransferred(indexed address,indexed address,uint256)
+          handler: handleTokenTransferred
+        - event: TokenReceived(indexed address,indexed address,uint256)
+          handler: handleTokenReceived
+      file: ./src/mapping.ts

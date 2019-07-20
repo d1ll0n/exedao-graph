@@ -1,0 +1,78 @@
+type ApplicationAdded @entity {
+  id: ID!
+  applicant: Bytes! # address
+  shares: BigInt! # uint64
+}
+
+type ApplicationCanceled @entity {
+  id: ID!
+  applicant: Bytes! # address
+}
+
+type ExtensionAdded @entity {
+  id: ID!
+  extensionIndex: BigInt! # uint256
+  metaHash: Bytes! # bytes32
+}
+
+type ProposalSubmission @entity {
+  id: ID!
+  submitter: Bytes! # address
+  proposalHash: Bytes! # bytes32
+  metaHash: Bytes! # bytes32
+  votesCast: BigInt! # uint64
+}
+
+type ProposalVote @entity {
+  id: ID!
+  voter: Bytes! # address
+  proposalHash: Bytes! # bytes32
+  votesCast: BigInt! # uint64
+}
+
+type ProposalApproval @entity {
+  id: ID!
+  voter: Bytes! # address
+  proposalHash: Bytes! # bytes32
+}
+
+type ProposalExpiration @entity {
+  id: ID!
+  proposalHash: Bytes! # bytes32
+}
+
+type SharesBurned @entity {
+  id: ID!
+  daoist: Bytes! # address
+  shares: BigInt! # uint64
+}
+
+type SharesMinted @entity {
+  id: ID!
+  daoist: Bytes! # address
+  shares: BigInt! # uint64
+}
+
+type TokenAdded @entity {
+  id: ID!
+  tokenAddress: Bytes! # address
+}
+
+type TokenRemoved @entity {
+  id: ID!
+  tokenAddress: Bytes! # address
+}
+
+type TokenTransferred @entity {
+  id: ID!
+  tokenAddress: Bytes! # address
+  recipient: Bytes! # address
+  amount: BigInt! # uint256
+}
+
+type TokenReceived @entity {
+  id: ID!
+  tokenAddress: Bytes! # address
+  sender: Bytes! # address
+  amount: BigInt! # uint256
+}
