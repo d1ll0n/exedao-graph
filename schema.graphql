@@ -1,78 +1,43 @@
-type ApplicationAdded @entity {
+type Daoist @entity {
   id: ID!
-  applicant: Bytes! # address
+  address: Bytes! # address
   shares: BigInt! # uint64
 }
 
-type ApplicationCanceled @entity {
+type Application @entity {
   id: ID!
   applicant: Bytes! # address
-}
-
-type ExtensionAdded @entity {
-  id: ID!
-  extensionIndex: BigInt! # uint256
+  shares: BigInt! # uint64
   metaHash: Bytes! # bytes32
+  weiTribute: BigInt # uint256
+  tokenTributes: [Bytes!] # address[];
+  tokenTributeValues: [BigInt!] # uint256[]
+  txHash: Bytes! # bytes32
+  acceptedAt: Bytes # bytes32
+  canceledAt: Bytes # bytes32
 }
 
-type ProposalSubmission @entity {
+type Proposal @entity {
   id: ID!
   submitter: Bytes! # address
   proposalHash: Bytes! # bytes32
   metaHash: Bytes! # bytes32
   votesCast: BigInt! # uint64
+  txHash: Bytes! # bytes32
+  acceptedAt: BigInt # uint64
 }
 
-type ProposalVote @entity {
+type Extension @entity {
   id: ID!
-  voter: Bytes! # address
-  proposalHash: Bytes! # bytes32
-  votesCast: BigInt! # uint64
+  extensionIndex: BigInt! # uint256
+  metaHash: Bytes! # bytes32
+  extensionAddress: Bytes! # address
+  useDelegate: Boolean!
+  functionSignatures: [Bytes!]! # bytes4[]
 }
 
-type ProposalApproval @entity {
+type Token @entity {
   id: ID!
-  voter: Bytes! # address
-  proposalHash: Bytes! # bytes32
-}
-
-type ProposalExpiration @entity {
-  id: ID!
-  proposalHash: Bytes! # bytes32
-}
-
-type SharesBurned @entity {
-  id: ID!
-  daoist: Bytes! # address
-  shares: BigInt! # uint64
-}
-
-type SharesMinted @entity {
-  id: ID!
-  daoist: Bytes! # address
-  shares: BigInt! # uint64
-}
-
-type TokenAdded @entity {
-  id: ID!
-  tokenAddress: Bytes! # address
-}
-
-type TokenRemoved @entity {
-  id: ID!
-  tokenAddress: Bytes! # address
-}
-
-type TokenTransferred @entity {
-  id: ID!
-  tokenAddress: Bytes! # address
-  recipient: Bytes! # address
-  amount: BigInt! # uint256
-}
-
-type TokenReceived @entity {
-  id: ID!
-  tokenAddress: Bytes! # address
-  sender: Bytes! # address
-  amount: BigInt! # uint256
+  address: Bytes! # address
+  balance: BigInt! # uint256
 }

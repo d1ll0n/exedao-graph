@@ -12,71 +12,49 @@ import {
   TokenRemoved as TokenRemovedEvent,
   TokenTransferred as TokenTransferredEvent,
   TokenReceived as TokenReceivedEvent,
-  AddExtensionCall,
-  ExeDAO
-} from "../generated/ExeDAO/ExeDAO"
+  AddExtensionCall
+} from "../generated/Contract/Contract"
 import {
-  Daoist,
-  Application,
-  Proposal,
-  Extension,
-  Token
+  ApplicationAdded,
+  ApplicationCanceled,
+  ExtensionAdded,
+  ProposalSubmission,
+  ProposalVote,
+  ProposalApproval,
+  ProposalExpiration,
+  SharesBurned,
+  SharesMinted,
+  TokenAdded,
+  TokenRemoved,
+  TokenTransferred,
+  TokenReceived
 } from "../generated/schema"
 
-// APPLICATION FUNCTIONS
 export function handleApplicationAdded(event: ApplicationAddedEvent): void {
-  let exedao = ExeDAO.bind(event.address)
-  let entity = new Application('application -- ' + event.params.applicant)
-  let app = exedao.getApplication(event.params.applicant)
-  entity.applicant = app.applicant
-  entity.shares = app.shares
-  entity.metaHash = app.metaHash;
-  entity.txHash = event.transaction.hash;
-  entity.tokenTributes = app.tokenTributes;
-  entity.tokenTributeValues = app.tokenTributeValues;
+  let entity = new ApplicationAdded(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.applicant = event.params.applicant
+  entity.shares = event.params.shares
   entity.save()
 }
 
 export function handleApplicationCanceled(
   event: ApplicationCanceledEvent
 ): void {
-  let entity = Application.load('daoist -- ' + event.params.applicant);
-  entity.canceledAt = event.transaction.hash;
-  entity.save()
-}
-
-// DAOIST FUNCTIONS
-export function handleSharesMinted(event: SharesMintedEvent): void {
-  let entity = Daoist.load('address -- ' + event.params.daoist);
-  if (entity) entity.shares = entity.shares.plus(event.params.shares);
-  else {
-    entity = new Daoist('daoist -- ' + event.params.daoist);
-    entity.address = event.params.daoist;
-    entity.shares = event.params.shares;
-    let app = Application.load('application -- ' + event.params.daoist);
-    if (app) {
-      app.canceledAt = event.transaction.hash;
-      app.save()
-    }
-  }
-  entity.save()
-}
-
-export function handleSharesBurned(event: SharesBurnedEvent): void {
-  let entity = Daoist.load('address -- ' + event.params.daoist);
-  entity.address = event.params.daoist
-  entity.shares = entity.shares.minus(event.params.shares);
+  let entity = new ApplicationCanceled(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.applicant = event.params.applicant
   entity.save()
 }
 
 export function handleExtensionAdded(event: ExtensionAddedEvent): void {
-  let exedao = ExeDAO.bind(event.address)
-  let ext = exedao.getExtension(event.params.extensionIndex);
-  let entity = new Extension('extension -- ' + event.params.extensionIndex);
-  entity.functionSignatures = ext.functionSignatures;
-  entity.extensionAddress = ext.extensionAddress;
-  entity.metaHash = ext.metaHash;
-  entity.extensionIndex = event.params.extensionIndex;
+  let entity = new ExtensionAdded(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.extensionIndex = event.params.extensionIndex
+  entity.metaHash = event.params.metaHash
   entity.save()
 }
 
@@ -115,6 +93,24 @@ export function handleProposalExpiration(event: ProposalExpirationEvent): void {
     event.transaction.hash.toHex() + "-" + event.logIndex.toString()
   )
   entity.proposalHash = event.params.proposalHash
+  entity.save()
+}
+
+export function handleSharesBurned(event: SharesBurnedEvent): void {
+  let entity = new SharesBurned(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.daoist = event.params.daoist
+  entity.shares = event.params.shares
+  entity.save()
+}
+
+export function handleSharesMinted(event: SharesMintedEvent): void {
+  let entity = new SharesMinted(
+    event.transaction.hash.toHex() + "-" + event.logIndex.toString()
+  )
+  entity.daoist = event.params.daoist
+  entity.shares = event.params.shares
   entity.save()
 }
 
